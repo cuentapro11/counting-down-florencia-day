@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -52,15 +53,10 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
+				coral: {
+					DEFAULT: 'hsl(var(--coral))',
+					light: 'hsl(var(--coral-light))',
+					dark: 'hsl(var(--coral-dark))'
 				}
 			},
 			borderRadius: {
@@ -84,11 +80,52 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				fadeInUp: {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(50px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				slideIn: {
+					'0%': {
+						transform: 'translateX(-100%)'
+					},
+					'100%': {
+						transform: 'translateX(0)'
+					}
+				},
+				bounce: {
+					'0%, 20%, 50%, 80%, 100%': {
+						transform: 'translateY(0)'
+					},
+					'40%': {
+						transform: 'translateY(-10px)'
+					},
+					'60%': {
+						transform: 'translateY(-5px)'
+					}
+				},
+				scroll: {
+					'0%': {
+						transform: 'translateX(0)'
+					},
+					'100%': {
+						transform: 'translateX(-100%)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in-up': 'fadeInUp 0.8s ease-out',
+				'slide-in': 'slideIn 0.6s ease-out',
+				'bounce-soft': 'bounce 2s infinite',
+				'scroll': 'scroll 15s linear infinite'
 			}
 		}
 	},
