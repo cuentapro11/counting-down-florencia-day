@@ -47,6 +47,10 @@ All colors MUST be HSL.
     --pink-light: 330 50% 90%;
     --pink-medium: 330 60% 75%;
     --pink-dark: 330 70% 60%;
+    
+    /* Section alternating backgrounds */
+    --section-light: 339 100% 96%; /* #FEF0F4 */
+    --section-dark: 339 65% 88%; /* #F8C8DC */
   }
 }
 
