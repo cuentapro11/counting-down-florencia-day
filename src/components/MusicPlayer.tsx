@@ -1,84 +1,97 @@
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 
-const MusicPlayer = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const playerRef = useRef<any>(null);
+export interface MusicPlayerHandle {
+  playWithSound: () => void;
+}
 
-  useEffect(() => {
-    // Load YouTube API
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+interface MusicPlayerProps {
+  youtubeVideoId?: string;
+  autoStart?: boolean;
+}
 
-    // Initialize player when API is ready
-    (window as any).onYouTubeIframeAPIReady = () => {
-      playerRef.current = new (window as any).YT.Player('youtube-player', {
-        height: '0',
-        width: '0',
-        videoId: 'dQw4w9WgXcQ', // Replace with actual YouTube video ID
-        playerVars: {
-          autoplay: 1,
-          controls: 0,
-          showinfo: 0,
-          rel: 0,
-          loop: 1,
-          playlist: 'dQw4w9WgXcQ' // Same video ID for loop
-        },
-        events: {
-          onReady: () => {
-            setIsLoaded(true);
-            setIsPlaying(true);
-          },
-          onStateChange: (event: any) => {
-            if (event.data === (window as any).YT.PlayerState.PLAYING) {
-              setIsPlaying(true);
-            } else {
-              setIsPlaying(false);
-            }
-          }
+const MusicPlayer = forwardRef<MusicPlayerHandle, MusicPlayerProps>(
+  ({ youtubeVideoId = "dQw4w9WgXcQ", autoStart = false }, ref) => {
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const playerRef = useRef<any>(null);
+
+    useImperativeHandle(ref, () => ({
+      playWithSound: () => {
+        if (playerRef.current && isLoaded) {
+          playerRef.current.unMute();
+          playerRef.current.playVideo();
+          setIsPlaying(true);
         }
-      });
-    };
+      },
+    }));
 
-    return () => {
-      if (playerRef.current) {
-        playerRef.current.destroy();
-      }
-    };
-  }, []);
+    useEffect(() => {
+      const loadPlayer = () => {
+        playerRef.current = new (window as any).YT.Player("youtube-player", {
+          height: "0",
+          width: "0",
+          videoId: youtubeVideoId,
+          playerVars: {
+            autoplay: autoStart ? 1 : 0,
+            controls: 0,
+            showinfo: 0,
+            modestbranding: 1,
+            loop: 1,
+            playlist: youtubeVideoId,
+            mute: 1, // empieza en mute
+          },
+          events: {
+            onReady: () => setIsLoaded(true),
+            onStateChange: (event: any) => {
+              const YT = (window as any).YT;
+              if (event.data === YT?.PlayerState.PLAYING) setIsPlaying(true);
+              if (event.data === YT?.PlayerState.PAUSED) setIsPlaying(false);
+            },
+          },
+        });
+      };
 
-  const togglePlay = () => {
-    if (playerRef.current && isLoaded) {
-      if (isPlaying) {
-        playerRef.current.pauseVideo();
+      if (!(window as any).YT || !(window as any).YT.Player) {
+        const tag = document.createElement("script");
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(tag);
+        (window as any).onYouTubeIframeAPIReady = loadPlayer;
       } else {
-        playerRef.current.playVideo();
+        loadPlayer();
       }
-    }
-  };
 
-  return (
-    <>
-      <div id="youtube-player" style={{ display: 'none' }}></div>
-      <div className="music-player">
+      return () => playerRef.current?.destroy();
+    }, [youtubeVideoId, autoStart]);
+
+    const togglePlayPause = () => {
+      if (playerRef.current && isLoaded) {
+        if (isPlaying) {
+          playerRef.current.pauseVideo();
+        } else {
+          playerRef.current.unMute();
+          playerRef.current.playVideo();
+        }
+      }
+    };
+
+    return (
+      <div className="fixed bottom-6 right-6 z-40">
+        <div
+          id="youtube-player"
+          style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }}
+        ></div>
         <button
-          onClick={togglePlay}
-          className="bg-primary hover:bg-coral-dark text-white p-4 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 animate-bounce-soft"
+          onClick={togglePlayPause}
+          className="bg-gradient-to-r from-primary to-pink-medium hover:from-coral-dark hover:to-pink-dark text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-full p-4 transform hover:scale-110"
           disabled={!isLoaded}
         >
-          {isPlaying ? (
-            <Volume2 className="w-6 h-6" />
-          ) : (
-            <VolumeX className="w-6 h-6" />
-          )}
+          {isPlaying ? <Volume2 className="h-6 w-6" /> : <VolumeX className="h-6 w-6" />}
         </button>
       </div>
-    </>
-  );
-};
+    );
+  }
+);
 
 export default MusicPlayer;

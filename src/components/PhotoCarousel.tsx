@@ -20,7 +20,7 @@ const PhotoCarousel = () => {
           <p className="text-gray-600">Junto a personas que son muy importantes en mi vida</p>
           <div className="w-16 h-16 mx-auto mt-6 mb-8">
             <svg viewBox="0 0 24 24" className="w-full h-full text-primary">
-              <path fill="currentColor" d="M9,2V7.38L12,8.93L15,7.38V2H9M12,15.08L9,13.54V8.46L12,10L15,8.46V13.54L12,15.08M16,2V7.38L19.82,5.79C21.12,7.16 22,8.99 22,11C22,14.3 19.61,17 16.5,17H15V19L12,20.5L9,19V17H7.5C4.39,17 2,14.3 2,11C2,8.99 2.88,7.16 4.18,5.79L8,7.38V2H16Z" />
+              <path fill="currentColor" d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z"/>
             </svg>
           </div>
         </div>

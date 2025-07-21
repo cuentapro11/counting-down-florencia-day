@@ -1,12 +1,13 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import HeroSection from '@/components/HeroSection';
 import CountdownSection from '@/components/CountdownSection';
 import CelebrationSection from '@/components/CelebrationSection';
 import PartySection from '@/components/PartySection';
 import PhotoCarousel from '@/components/PhotoCarousel';
 import GiftsSection from '@/components/GiftsSection';
-import MusicPlayer from '@/components/MusicPlayer';
+import MusicPlayer, { MusicPlayerHandle } from '@/components/MusicPlayer';
+import WelcomeModal from '@/components/WelcomeModal';
 
 const Index = () => {
   const [isVisible, setIsVisible] = useState({
@@ -16,6 +17,8 @@ const Index = () => {
     party: false,
     gifts: false
   });
+  const [showWelcomeModal, setShowWelcomeModal] = useState(true);
+  const musicPlayerRef = useRef<MusicPlayerHandle>(null);
 
   useEffect(() => {
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
@@ -40,6 +43,17 @@ const Index = () => {
 
     return () => observer.disconnect();
   }, []);
+
+  const handleEnterWithMusic = () => {
+    setShowWelcomeModal(false);
+    setTimeout(() => {
+      musicPlayerRef.current?.playWithSound();
+    }, 500);
+  };
+
+  const handleEnterWithoutMusic = () => {
+    setShowWelcomeModal(false);
+  };
 
   return (
     <div className="relative">
@@ -83,7 +97,14 @@ const Index = () => {
         </div>
       </div>
       
-      <MusicPlayer />
+      <MusicPlayer ref={musicPlayerRef} />
+      
+      {showWelcomeModal && (
+        <WelcomeModal 
+          onEnterWithMusic={handleEnterWithMusic}
+          onEnterWithoutMusic={handleEnterWithoutMusic}
+        />
+      )}
     </div>
   );
 };

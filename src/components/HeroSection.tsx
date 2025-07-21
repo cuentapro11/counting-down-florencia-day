@@ -20,16 +20,9 @@ const HeroSection = () => {
             <Music className="w-6 h-6 text-primary mx-auto" />
             <div className="w-16 h-0.5 bg-primary mx-auto mt-2"></div>
           </div>
-          <p className="mt-6 text-sm leading-relaxed mb-6">
+          <p className="mt-6 text-sm leading-relaxed">
             Te espero para compartir la alegría de esa noche que será para mí mágica, inolvidable y única.
           </p>
-          <button 
-            onClick={handleWhatsApp}
-            className="coral-button w-full flex items-center justify-center gap-3"
-          >
-            <MessageCircle className="w-5 h-5" />
-            Confirmar Asistencia
-          </button>
         </div>
       </div>
     </section>
